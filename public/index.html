@@ -17,22 +17,44 @@
     
     <script type="text/jsx">
 
-      var data = [
-        {author: "Pete Hunt", text: "This is one comment"},
-        {author: "Jordan Walke", text: "This is *another* comment"}
-      ];
 
       // render: returns a tree of React components that will eventually render to HTML
 
       // in jsx code:
       // create a new react component 'CommentBox'
       var CommentBox = React.createClass({
+        // getInitialState() executes exactly once during the lifecycle of the component and sets up the initial state of the component.
+
+        loadCommentsFromServer: function() {
+        // get the data from the server (in this case it's just a static file comments.json)
+          $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            success: function(data) {
+              this.setState({data: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.url, status, err.toString());
+            }.bind(this)
+          });
+        },
+      
+        getInitialState: function() {
+          return {data: []};
+        },
+
+        // run the above functions 
+        // moved the AJAX call to a separate method and call it when the component is first loaded and every 2 seconds after that.
+        componentDidMount: function() {
+          this.loadCommentsFromServer();
+          setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+        },
         render: function() {
           return (
             <div className="commentBox">
               Hello, world! I am a CommentBox. This is cool
               <h1>Comments</h1>
-              <CommentList data={this.props.data} />
+              <CommentList data={this.state.data} />
               <CommentForm />
             </div>
           );
@@ -88,7 +110,7 @@
       
       // React.render() instantiates the root component, starts the framework, and injects the markup into a raw DOM element, provided as the second argument. (div id="content" in the dom)
       React.render(
-        <CommentBox data={data} />,
+        <CommentBox url="comments.json" pollInterval={2000} />,
         document.getElementById('content')
       );
 
