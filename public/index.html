@@ -1,0 +1,104 @@
+<!-- https://facebook.github.io/react/docs/tutorial.html -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <!-- Not present in the tutorial. Just for basic styling. -->
+    <link rel="stylesheet" href="css/base.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/JSXTransformer.js"></script>
+    <!-- jquery is NOT a dependency of react js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+    <div id="content"></div>
+    
+    <script type="text/jsx">
+      // render: returns a tree of React components that will eventually render to HTML
+
+      // in jsx code:
+      // create a new react component 'CommentBox'
+      var CommentBox = React.createClass({
+        render: function() {
+          return (
+            <div className="commentBox">
+              Hello, world! I am a CommentBox. This is cool
+              <h1>Comments</h1>
+              <CommentList />
+              <CommentForm />
+            </div>
+          );
+        }
+      });
+
+      // Now that we have defined the Comment component, we will want to pass it the author name and comment text.
+      var CommentList = React.createClass({
+        render: function() {
+          return (
+            <div className="commentList">
+              <Comment author="Pete Hunt">This is one comment</Comment>
+              <Comment author="Jordan Walke">This is *another* comment</Comment>
+              <Comment author="Ben Caneba">This is my comment</Comment>
+            </div>
+          );
+        }
+      });
+
+      var CommentForm = React.createClass({
+        render: function() {
+          return (
+            <div className="commentForm">
+              Hello, world! I am a CommentForm.
+            </div>
+          );
+        }
+      });
+
+      // comment component depends on data passed in from its parent. 
+      // Using props we will be able to read the data passed to the Comment from the CommentList, and render some markup:
+      // you can drop text or React components into the tree. We access named attributes passed to the component as keys on this.props and any nested elements as this.props.children.
+      // this.props.author and this.props.children are defined in var CommentList
+      var Comment = React.createClass({
+        render: function() {
+          return (
+            <div className="comment">
+              <h2 className="commentAuthor">
+                {this.props.author}
+              </h2>
+              {this.props.children}
+            </div>
+          );
+        }
+      });
+
+      
+      // React.render() instantiates the root component, starts the framework, and injects the markup into a raw DOM element, provided as the second argument. (div id="content" in the dom)
+      React.render(
+        <CommentBox />,
+        document.getElementById('content')
+      );
+
+      // above is the same as:
+      // var CommentBox = React.createClass({displayName: 'CommentBox',
+      //   render: function() {
+      //     return (
+      //       React.createElement('div', {className: "commentBox"},
+      //         "Hello, world! I am a CommentBox."
+      //       )
+      //     );
+      //   }
+      // });
+      // React.render(
+      //   React.createElement(CommentBox, null),
+      //   document.getElementById('content')
+      // );
+
+
+    </script>
+
+
+
+  </body>
+</html>
