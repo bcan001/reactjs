@@ -16,6 +16,12 @@
     <div id="content"></div>
     
     <script type="text/jsx">
+
+      var data = [
+        {author: "Pete Hunt", text: "This is one comment"},
+        {author: "Jordan Walke", text: "This is *another* comment"}
+      ];
+
       // render: returns a tree of React components that will eventually render to HTML
 
       // in jsx code:
@@ -26,7 +32,7 @@
             <div className="commentBox">
               Hello, world! I am a CommentBox. This is cool
               <h1>Comments</h1>
-              <CommentList />
+              <CommentList data={this.props.data} />
               <CommentForm />
             </div>
           );
@@ -34,13 +40,19 @@
       });
 
       // Now that we have defined the Comment component, we will want to pass it the author name and comment text.
+      // rendering comments dynamically
       var CommentList = React.createClass({
         render: function() {
+          var commentNodes = this.props.data.map(function (comment) {
+            return (
+              <Comment author={comment.author}>
+                {comment.text}
+              </Comment>
+            );
+          });
           return (
             <div className="commentList">
-              <Comment author="Pete Hunt">This is one comment</Comment>
-              <Comment author="Jordan Walke">This is *another* comment</Comment>
-              <Comment author="Ben Caneba">This is my comment</Comment>
+              {commentNodes}
             </div>
           );
         }
@@ -76,7 +88,7 @@
       
       // React.render() instantiates the root component, starts the framework, and injects the markup into a raw DOM element, provided as the second argument. (div id="content" in the dom)
       React.render(
-        <CommentBox />,
+        <CommentBox data={data} />,
         document.getElementById('content')
       );
 
